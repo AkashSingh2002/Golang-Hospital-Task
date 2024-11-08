@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"hospital-management-system/pkg/config"
+	"hospital-management-system/internal/migrations"
 	_ "github.com/lib/pq"
 )
 
@@ -17,6 +18,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	migrations.Migrate(db)
 	defer db.Close()
 	port := os.Getenv("PORT") 
 	if port == "" {
