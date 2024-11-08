@@ -7,6 +7,7 @@ import (
 	"os"
 	"hospital-management-system/pkg/config"
 	"hospital-management-system/internal/migrations"
+	"hospital-management-system/internal/handlers"
 	_ "github.com/lib/pq"
 )
 
@@ -27,6 +28,8 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Hello, world!")
 	})
+	http.HandleFunc("/signup", handlers.SignUpHandler(db, cfg))
+	http.HandleFunc("/login", handlers.LoginHandler(db, cfg))
 	fmt.Println("Starting server on port:", port)
 	http.ListenAndServe(":"+port, nil)
 }

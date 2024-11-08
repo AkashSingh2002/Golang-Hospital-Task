@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 	"gorm.io/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -13,4 +14,13 @@ type User struct {
 	CreatedAt time.Time      `gorm:"autoCreateTime"`
 	UpdatedAt time.Time      `gorm:"autoUpdateTime"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
+
+func (u *User) HashPassword() error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	u.Password = string(hashedPassword)
+	return nil
 }
