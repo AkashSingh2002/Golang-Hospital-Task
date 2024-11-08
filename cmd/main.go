@@ -18,7 +18,6 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-
 	port := os.Getenv("PORT") 
 	if port == "" {
 		port = "8080"
