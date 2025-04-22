@@ -1,35 +1,46 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"log"
 	"net/http"
-	"os"
-	"hospital-management-system/pkg/config"
-	"hospital-management-system/internal/migrations"
+
 	"hospital-management-system/internal/handlers"
-	_ "github.com/lib/pq"
+	"hospital-management-system/internal/models"
+	"hospital-management-system/internal/repository"
+	"hospital-management-system/internal/service"
+	"hospital-management-system/pkg/config"
+	"github.com/gorilla/mux"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func main() {
+	// Load configuration
 	cfg := config.LoadConfig()
-	dbConn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s ",
-		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName)
-	db, err := sql.Open("postgres", dbConn)
+
+	// Initialize database
+	db, err := gorm.Open(sqlite.Open(cfg.DatabaseURL), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	migrations.Migrate(db)
-	defer db.Close()
-	port := os.Getenv("PORT") 
-	if port == "" {
-		port = "8080"
-	}
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello, world!")
-	})
-	http.HandleFunc("/signup", handlers.SignUpHandler(db, cfg))
-	http.HandleFunc("/login", handlers.LoginHandler(db, cfg))
-	fmt.Println("Starting server on port:", port)
-	http.ListenAndServe(":"+port, nil)
+
+	// Migrate models
+	db.AutoMigrate(&models.Patient{})
+
+	// Initialize repositories, services, and handlers
+	patientRepo := repository.NewPatientRepository(db)
+	patientService := service.NewPatientService(patientRepo)
+	patientHandler := handlers.NewPatientHandler(patientService)
+
+	// Set up router
+	r := mux.NewRouter()
+	r.HandleFunc("/patients", patientHandler.CreatePatient).Methods("POST")
+	r.HandleFunc("/patients", patientHandler.ListPatients).Methods("GET")
+	r.HandleFunc("/patients/{id}", patientHandler.GetPatient).Methods("GET")
+	r.HandleFunc("/patients/{id}", patientHandler.UpdatePatient).Methods("PUT")
+	r.HandleFunc("/patients/{id}", patientHandler.DeletePatient).Methods("DELETE")
+
+	// Start server
+	log.Println("Server is running on port 8080")
+	http.ListenAndServe(":8080", r)
 }

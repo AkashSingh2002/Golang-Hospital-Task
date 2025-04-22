@@ -1,0 +1,42 @@
+/* Placeholder styles for ReceptionistPortal component */
+.receptionist-portal {
+  padding: 20px;
+}
+
+.receptionist-portal h2 {
+  text-align: center;
+}
+
+.receptionist-portal form {
+  margin-bottom: 20px;
+}
+
+.receptionist-portal form input {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.receptionist-portal form button {
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.receptionist-portal form button:hover {
+  background-color: #218838;
+}
+
+.receptionist-portal ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.receptionist-portal ul li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}

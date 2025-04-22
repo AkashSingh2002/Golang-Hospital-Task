@@ -1,0 +1,36 @@
+/* Placeholder styles for DoctorPortal component */
+.doctor-portal {
+  padding: 20px;
+}
+
+.doctor-portal h2 {
+  text-align: center;
+}
+
+.doctor-portal ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.doctor-portal ul li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.doctor-portal ul li button {
+  padding: 5px 10px;
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.doctor-portal ul li button:hover {
+  background-color: #e0a800;
+}

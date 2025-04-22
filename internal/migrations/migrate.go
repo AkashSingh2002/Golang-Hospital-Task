@@ -18,9 +18,9 @@ func Migrate(db *sql.DB) {
 	if err != nil {
 		log.Fatalf("Error : %v", err)
 	}
-	err = grmDb.AutoMigrate(&models.User{})
+	err = grmDb.AutoMigrate(&models.User{}, &models.Patient{})
 	if err != nil {
-		log.Fatalf("Faileure : %v", err)
+		log.Fatalf("Failure : %v", err)
 	}
 	log.Println("Database migration completed successfully...")
 }
